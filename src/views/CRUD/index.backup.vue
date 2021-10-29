@@ -93,8 +93,7 @@
 
 <script>
     import axios from 'axios'
-    import formtambah from './formtambah.vue'
-
+    import formtambah from './formfilter.vue'
 
     export default {
         components: { 

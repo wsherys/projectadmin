@@ -93,8 +93,21 @@ export const constantRoutes = [
       {
         path: 'index',
         component: () => import('@/views/CRUD/index'),
-        name: 'index',
+        name: 'CRUD',
         meta: { title: 'CRUD', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+
+  //API axios
+  {
+    path: '/api/edit/:id',
+    component: Layout,
+    children: [
+      {
+        path: '/api/edit/:id',
+        name: 'edit',
+        component: () => import('@/views/CRUD/formedit')
       }
     ]
   },

@@ -1,99 +1,91 @@
 <template>
     <div class="app app-container">
 
-        <el-row :gutter="2">
-            <el-col :span="24">
-                <h2>Data</h2>
-            </el-col>
+        <!-- filter -->
+        <forms />
 
-            <el-col style="margin-bottom: 2%;" :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-                <!-- <el-button type="primary" @click="formtambah = true">Tambah</el-button> -->
-                <formtambah></formtambah>
-            </el-col>
+        <!-- tabel -->
+        <el-table
+        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        border
+        fit
+        highlight-current-row
+        style="width: 100%;"
+        >
+        <el-table-column label="ID" min-width="150px" >
+            <template slot-scope="{row}">
+            <span class="link-type" >{{ row.id }}</span>
+            </template>
+        </el-table-column>
 
-            <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-                <el-card>
-                    <el-table
-                        :data="posts.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange"
-                        :default-sort = "{prop: 'id', order: 'descending'}"
-                        >
+        <el-table-column label="Nama" min-width="150px">
+            <template slot-scope="{row}">
+            <span class="link-type" >{{ row.name }}</span>
+            </template>
+        </el-table-column>
 
-                        <el-table-column
-                        type="selection"
-                        width="55">
-                        </el-table-column>
+        <el-table-column label="Email" min-width="150px">
+            <template slot-scope="{row}">
+            <span class="link-type" >{{ row.email }}</span>
+            </template>
+        </el-table-column>
 
-                        <el-table-column
-                        label="ID"
-                        prop="id">
-                        </el-table-column>
+        <el-table-column label="Alamat" min-width="150px">
+            <template slot-scope="{row}">
+            <span class="link-type" >{{ row.address }}</span>
+            </template>
+        </el-table-column>
 
-                        <el-table-column
-                        label="Nama"
-                        prop="name">
-                        </el-table-column>
+        <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+            <template slot-scope="{row}">
+            <!-- <el-button type="primary" size="mini" @click="handleUpdate(row)">
+                Edit
+            </el-button> -->
 
-                        <el-table-column
-                        label="Email"
-                        prop="email">
-                        </el-table-column>
+            <el-button
+            type="primary"
+            size="mini"
+            @click="PostEdit(row.id)"
+            >Edit</el-button>
+            
+            <el-button
+            type="danger"
+            size="mini"
+            @click="handleDelete(row.id)"
+            >Delete</el-button>
 
-                        <el-table-column
-                        label="Alamat"
-                        prop="address">
-                        </el-table-column>
-                        
-                        <el-table-column
-                        align="right"
-                        fixed="right"
-                        width="200"
-                        >
-                            <template slot="header" slot-scope="{}">
-                                <el-input
-                                v-model="search"
-                                size="mini"
-                                placeholder="Type to search"/>
-                            </template>
-                            
-                            <template slot-scope="scope" >
-                                <!-- <el-button
-                                size="mini"
-                                @click="handleEdit(scope.$index, scope.row.id)" 
-                                >Edit</el-button> -->
-                                <el-button
-                                size="mini"
-                                @click="PostEdit(scope.$index, scope.row.id), formedit = true"
-                                >Edit</el-button>
+            </template>
+        </el-table-column>
+        
+        </el-table>
 
-                                <el-button
-                                size="mini"
-                                type="danger"
-                                @click="handleDelete(scope.$index, scope.row.id)">Delete</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-card>
-            </el-col>
-        </el-row>
+        <!-- pagination -->
+        <!-- <el-pagination layout="prev, pager, next" :total="this.tableData.length" @current-change="setPage"></el-pagination> -->
+        <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length">
+        </el-pagination>
 
-         <!-- dialog edit -->
+        <!-- dialog edit -->
         <el-dialog 
         title="Edit Data" 
         :visible.sync="formedit" 
         width="30%"
         :before-close="handleClose"
         >
-            <!-- <div v-for="data in posts" :key="data">
+            <!-- <div v-for="data in tableData" :key="data.id">
                 <div v-if="data.id == id">{{ data.name }}</div>
             </div> -->
-            <!-- {{ id }} -->
-            
-            <div v-for="data in posts" :key="data">
+
+            <!-- :key  diisi sesuai dengan objek data array. -->
+            <div v-for="data in tableData" :key="data.id">
                 <div v-if="data.id == id">
                     <form @submit.prevent="PostUpdate">
-
                         <el-form :model="post">
                             <el-form-item 
                             label="Nama" 
@@ -103,7 +95,7 @@
                                 { required: true, message: 'Masukkan nama', trigger: 'blur' },
                             ]"
                             >
-                                <el-input v-model="post.name" :placeholder="data.name" autocomplete="off"></el-input>
+                                <el-input v-model="post.name" :placeholder="data.name" autocomplete="off">xx</el-input>
                             </el-form-item>
 
                             <el-form-item 
@@ -129,12 +121,10 @@
                         </el-form>
 
                         <el-input type="submit" value="Simpan" ></el-input>
-
                     </form>
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
-                <!-- <el-button @click="tambah = false">Cancel</el-button> -->
                 <!-- <el-button type="submit">Confirm</el-button> -->
                 <!-- <el-input type="submit" value="Simpan"></el-input> -->
             </span>
@@ -148,61 +138,107 @@
 
 <script>
     import axios from 'axios'
-    import formtambah from './formtambah.vue'
+    import forms from './formfilter.vue'
 
     export default {
         components: { 
-            formtambah
+            forms
         },
 
         data() {
             return {
-                post: {},
-                posts: [],
-                search: '',
-                multipleSelection: [],
-                name: null,
-                email: null,
-                address: null,
-                formedit: true,
+                listLoading: true,
+     
+                tableData:[{
+                    id: "",
+                    name: "",
+                    email: "",
+                    address: ""
+                }],
+                
+                currentPage: 1,
+                pagesize:10,
                 formLabelWidth: '100px',
-
+                
+                post: {name: null, email: null, address: null },
+                
+                multipleSelection: [],
+                formedit: true,
                 id: this.$route.params.id //this is the id from the browser
-
             }
         },
 
+        mounted () {
+            axios
+            .get(`http://127.0.0.1:8000/api/customers/${this.$route.params.id}`)
+            .then(response => (
+                this.post.name = response.data.data.name,
+                this.post.email = response.data.data.email,
+                this.post.address = response.data.data.address
+            ))
+        },
+
+        // created() {
+        //     axios.get('http://127.0.0.1:8000/api/customers').then(response => {
+        //     this.posts = response.data.data;
+        //     });
+        // },
+
+        computed: {
+            pagedTableData() {
+            return this.tableData.slice(this.pageSize * this.page - this.pageSize, this.pageSize * this.page)
+            },
+        },
         created() {
-            axios.get('http://127.0.0.1:8000/api/customers').then(response => {
-            this.posts = response.data.data;
-            });
+            this.getList()
         },
 
         methods: {
+            handleSizeChange(size) {
+            this.pagesize = size;
+            },
+            handleCurrentChange(currentPage) {
+            this.currentPage = currentPage;
+            },
+            
+            getList() {
+                this.listLoading = true //data loading 
+                //get data API with axios
+                axios.get('http://127.0.0.1:8000/api/customers').then(response => {
+                this.tableData = response.data.data;
+            });
+            // Just to simulate the time of the request
+            setTimeout(() => {
+                this.listLoading = false
+                }, 1.5 * 1000)
+            },
+
+            PostEdit(row){
+            // console.log(index, row);
+            this.$router.push(`/api/edit/${row}`);
+            },
             handleClose(done) {
                 this.$confirm('Apakah Anda yakin untuk menutup dialog ini?')
                 .then(_ => {
                     done();
+                    //refresh page CRUD index
+                    this.$router.push({
+                        name: 'CRUD'
+                    });
+                    //reload page
+                    // location.reload();
+                    //refresh
+                    this.$forceUpdate();
+
                 })
                 .catch(_ => {});
             },
-            toggleSelection(rows) {
-                if (rows) {
-                rows.forEach(row => {
-                    this.$refs.multipleTable.toggleRowSelection(row);
-                });
-                } else {
-                this.$refs.multipleTable.clearSelection();
-                }
-            },
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-            },
-            PostEdit(index, row){
-                // console.log(index, row);
-                // alert(`edit ${row}`);
-                this.$router.push(`/api/edit/${row}`);
-            },
+            
+            // PostEdit(row){
+            //     // console.log(index, row);
+            //     // alert(`edit ${row}`);
+            //     this.$router.push(`/api/edit/${row}`);
+            // },
            
             PostUpdate () {
                 this.errors=[];
@@ -217,70 +253,72 @@
                         this.$router.push({
                             name: 'CRUD'
                         });
-                        location.reload();
+                        //reload page
+                        this.$router.go()
+                        //refresh
+                        // this.$forceUpdate();
                         // console.log(response);
                     }).catch(error => {
                     this.validation = error.response.data.data;
                     });
-
-
-
                 }
-                else{
+                // else{
 
-                    if (!this.post.name) {
-                    this.errors.push("Mohon isi nama.");
-                    }
-
-                   
-                    if (!this.post.email) {
-                        this.errors.push("Mohon isi email dengan benar.");
-                    }
-                    
-                    // if (!this.validEmail(this.post.email)) {
-                    //     this.errors.push('Email tidak valid.');
-                    // }
-
-                     if (!this.post.address) {
-                        this.errors.push("Mohon isi alamat.");
-                    }
-
-
-                }
+                //     if (!this.post.name) {
+                //     this.errors.push("Mohon isi nama.");
+                //     }
+                //     if (!this.post.email) {
+                //         this.errors.push("Mohon isi email dengan benar.");
+                //     }
+                //     // if (!this.validEmail(this.post.email)) {
+                //     //     this.errors.push('Email tidak valid.');
+                //     // }
+                //      if (!this.post.address) {
+                //         this.errors.push("Mohon isi alamat.");
+                //     }
+                // }
             },
-            handleDelete(index, row) {
-                this.$confirm(`Ini akan menghapus ID ${row} secara permanen. Lanjutkan?`, 'Peringatan',{
-                confirmButtonText: 'OK',
-                cancelButtonText: 'Cancel',
-                type: 'warning'
-                }).then(() => {
 
-                    axios.delete(`http://127.0.0.1:8000/api/customers/${row}`)
-                    .then(response => {
-                    this.posts.splice(this.posts.indexOf(row), 1);
-                    // alert(`data dihapus ${row}`);
-                    location.reload(); 
-                    // console.log(response);
-                    }).catch(error => {
-                    // console.log(error.response);
-                    this.tampilkanpesan("error gak bisa hapus");
+            handleDelete(row) 
+            {
+            this.$confirm(`Ini akan menghapus ID ${row} secara permanen. Lanjutkan?`, 'Peringatan',{
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning'
+            }).then(() => 
+            {
+                axios.delete(`http://127.0.0.1:8000/api/customers/${row}`)
+                .then(response => {
+                    this.$router.push({
+                        name: 'CRUD'
                     });
+                    // reload page
+                    // location.reload();
+                    // refresh
+                    this.$forceUpdate();
 
-                    this.$message({
-                        type: 'success',
-                        message: `Hapus ID ${row} sukses`
-                    });
-                }).catch(() => {
+                    this.tampilkanpesan("bisa hapus");
+                    console.log(response);
+                })
+
                 this.$message({
-                    type: 'info',
-                    message: `Hapus ID ${row} Gagal`
-                });          
+                    type: 'success',
+                    message: `Hapus ID ${row} sukses`
                 });
+
+            }).catch(() => {
+                this.tampilkanpesan("error gak bisa hapus");
+                console.log(error.response);
+
+                this.$message({
+                type: 'info',
+                message: `Hapus ID ${row} Gagal`
+                });
+            });
             },
             tampilkanpesan(isipesan){
-                alert(isipesan);
-                console.log(isipesan);
-
+            // alert(isipesan);
+            console.log(isipesan);
             }
         }
     }

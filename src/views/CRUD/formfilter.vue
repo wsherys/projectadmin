@@ -1,6 +1,15 @@
 <template>
-    <div>
-        <el-button type="primary" @click="formtambah = true">Form Tambah</el-button>
+    <div class="filter-container">
+
+        <el-input v-model="listQuery.name" placeholder="Nama" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"  />
+
+        <!-- <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+            Search
+        </el-button> -->
+
+        <el-button class="filter-item"  style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="formtambah = true">
+            Tambah
+        </el-button>
 
         <el-dialog 
         title="Tambah Data" 
@@ -46,6 +55,7 @@
                 <el-input type="submit" value="Simpan" ></el-input>
 
             </form>
+
             <span slot="footer" class="dialog-footer">
                 <!-- <el-button @click="tambah = false">Cancel</el-button> -->
                 <!-- <el-button type="submit">Confirm</el-button> -->
@@ -53,14 +63,16 @@
             </span>
         </el-dialog>
     </div>
+    
+    
 </template>
+
 
 <script>
     import axios from 'axios'
 
     export default {
-        components: { 
-        },
+        components: { },
 
         data() {
             return {
@@ -71,6 +83,15 @@
                 email: null,
                 address: null,
                 formLabelWidth: '100px',
+
+                listQuery: {
+                    page: 1,
+                    // limit: 20,
+                    // importance: undefined,
+                    name: undefined,
+                    // type: undefined,
+                    // sort: '+id'
+                },
             }
         },
         methods: {
@@ -103,6 +124,10 @@
                 // else{
                 //     // alert("gagal");
                 // }
+            },
+            handleFilter() {
+                this.listQuery.page = 1
+                this.getList()
             },
         }
     }
