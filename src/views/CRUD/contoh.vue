@@ -1,107 +1,96 @@
 <template>
     <div class="app-container">
         <!-- filter -->
-        <div class="filter-container">
-            <el-input v-model="listQuery.name" placeholder="Nama" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"  />
+        ......
 
-            <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-                Search
-            </el-button>
-
-            <el-button class="filter-item"  style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="formtambah = true">
-                Tambah
-            </el-button>
-        </div>
-
-        <el-dialog 
-        title="Tambah Data" 
-        :visible.sync="formtambah" 
-        width="30%"
-        :before-close="handleClose"
+        <el-table
+        :data="tableData.slice(pagesize * currentPage - pagesize, pagesize * currentPage)"
+        border
+        fit
+        highlight-current-row
+        style="width: 100%;"
+        :default-sort="{prop: 'id', order: 'ascending'}"
         >
-            <form @submit.prevent="onsubmit">
-                <el-form :model="post">
-                    <el-form-item 
-                    label="Nama" 
-                    :label-width="formLabelWidth"
-                    prop="name"
-                    :rules="[
-                        { required: true, message: 'Masukkan nama', trigger: 'blur' },
-                    ]"
-                    >
-                        <el-input v-model="post.name" placeholder="masukkan nama" autocomplete="off"></el-input>
-                    </el-form-item>
+        
+            ......
 
-                    <el-form-item 
-                        label="Email" 
-                        :label-width="formLabelWidth"
-                        prop="email"
-                        :rules="[
-                            { required: true, message: 'Masukkan email', trigger: 'blur' },
-                            { type: 'email', message: 'Masukkan email dengan benar', trigger: ['blur', 'change'] }
-                        ]"
-                    >
-                        <el-input v-model="post.email" placeholder="masukkan email"></el-input>
-                    </el-form-item>
+            <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+                <template slot-scope="{row}">
 
-                    <el-form-item label="Alamat" :label-width="formLabelWidth">
-                        <el-input
-                        type="textarea"
-                        :autosize="{ minRows: 2, maxRows: 4}"
-                        placeholder="Masukkan alamat"
-                        v-model="post.address">
-                        </el-input>
-                    </el-form-item>
-                </el-form>
+                <el-button
+                type="primary"
+                size="mini"
+                @click="PostEdit(row.id)"
+                >Edit</el-button>
+                
+                <el-button
+                type="danger"
+                size="mini"
+                @click="handleDelete(row.id)"
+                >Delete</el-button>
 
-                <el-input type="submit" value="Simpan" ></el-input>
-
-            </form>
-            <span slot="footer" class="dialog-footer"></span>
-        </el-dialog>
-
+                </template>
+            </el-table-column>
+        
+        </el-table>
     </div>
 </template>
 
 <script>
-    export default 
-    {
+   
+    import axios from 'axios'
+
+    export default {
+        name: 'CRUD',
+            
         data() {
             return {
-            formtambah: false,
-            post: {},
-            name: null,
-            email: null,
-            address: null,
-            formLabelWidth: '100px',
+            // .....
             }
         },
+        computed: {
+            // .....
+        },
+        created() {
+            // .....
+        },
         methods: {
-            handleClose(done) {
-                this.$confirm('Apakah Anda yakin untuk menutup dialog ini?')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => {});
-            },
-
-            onsubmit () {
-                this.result = Object.assign({}, this.post);
-
-                if(this.post.address && this.post.name && this.post.email){
-                    axios.post('http://localhost:8000/api/customers', this.post)
-                        .then((response) => {
-                        //redirect page
-                        this.$router.push({
-                            name: 'CRUD'
-                        });
-                        location.reload();
-                        }).catch(error => {
-                        this.validation = error.response.data.data;
+            handleDelete(row) 
+            {
+            this.$confirm(`Ini akan menghapus ID ${row} secara permanen. Lanjutkan?`, 'Peringatan',{
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning'
+            }).then(() => 
+            {
+                axios.delete(`http://127.0.0.1:8000/api/customers/${row}`)
+                .then(response => {
+                    this.$router.push({
+                        name: 'CRUD'
                     });
-                }
+                    
+                // reload page
+                this.$router.go()
+
+                this.tampilkanpesan("bisa hapus");
+                console.log(response);
+
+                })
+                
+                this.$message({
+                    type: 'success',
+                    message: `Hapus ID ${row} sukses`
+                });
+
+            }).catch(() => {
+                this.tampilkanpesan("error gak bisa hapus");
+
+                this.$message({
+                type: 'info',
+                message: `Hapus ID ${row} Gagal`
+                });
+            });
             },
-            
         }
     }
 </script>

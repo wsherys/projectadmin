@@ -88,14 +88,38 @@ export const constantRoutes = [
   {
     path: '/CRUD',
     component: Layout,
-    // redirect: '/CRUD',
+    redirect: 'noRedirect',
+    meta: {
+      title: 'CRUD',
+      icon: 'component'
+    },
     children: [
       {
         path: 'index',
         component: () => import('@/views/CRUD/index'),
         name: 'CRUD',
-        meta: { title: 'CRUD', icon: 'dashboard', affix: true }
-      }
+        meta: { title: 'Contoh CRUD', icon: 'documentation', affix: true }
+      },
+      {
+        path: 'Asshomadiyah',
+        component: () => import('@/views/CRUD/Tbl'),
+        name: 'Asshomadiyah',
+        meta: { title: 'Asshomadiyah',icon: 'component' },
+        children: [
+          {
+            path: 'DataPasien',
+            component: () => import('@/views/CRUD/TblDataPasien'),
+            name: 'DataPasien',
+            meta: { title: 'Data Pasien' }
+          },
+          // {
+          //   path: 'persetujuan',
+          //   component: () => import('@/views/CRUD/TblDataPasien'),
+          //   name: 'persetujuan',
+          //   meta: { title: 'Persetujuan' }
+          // }
+        ]
+      },
     ]
   },
 
@@ -108,6 +132,18 @@ export const constantRoutes = [
         path: '/api/edit/:id',
         name: 'edit',
         component: () => import('@/views/CRUD/formedit')
+      }
+    ]
+  },
+
+  {
+    path: '/api/edit_pasien/:id',
+    component: Layout,
+    children: [
+      {
+        path: '/api/edit_pasien/:id',
+        name: 'edit',
+        component: () => import('@/views/CRUD/TblEditDataPasien')
       }
     ]
   },

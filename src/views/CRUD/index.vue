@@ -58,17 +58,13 @@
             </form>
 
             <span slot="footer" class="dialog-footer">
-                <!-- <el-button @click="tambah = false">Cancel</el-button> -->
-                <!-- <el-button type="submit">Confirm</el-button> -->
-                <!-- <el-input type="submit" value="Simpan"></el-input> -->
             </span>
         </el-dialog>
     </div>
 
     <!-- tabel -->
-    <!-- :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" -->
     <el-table
-      :data="tableData.slice(pagesize * currentPage - pagesize, pagesize * currentPage)"
+      :data="pagedTableData"
       border
       fit
       highlight-current-row
@@ -145,6 +141,8 @@ export default {
   
   data() {
     return {
+      search: null,
+
       listLoading: true,
       tableData:[],
       currentPage: 1,
@@ -157,27 +155,25 @@ export default {
       email: null,
       address: null,
       formLabelWidth: '100px',
+
       listQuery: {
-          page: 1,
-          // limit: 20,
-          // importance: undefined,
-          name: undefined,
-          // type: undefined,
-          // sort: '+id'
+        name: undefined,
       },
-     
-     
     }
   },
   computed: {
-    pagedTableData() {
-      return this.tableData.slice(this.pageSize * this.page - this.pageSize, this.pageSize * this.page)
+    pagedTableData(dataTable, query) {
+      // return this.tableData.slice(this.pageSize * this.page - this.pageSize, this.pageSize * this.page)
+      return this.tableData.slice(this.pagesize * this.currentPage - this.pagesize, this.pagesize * this.currentPage)
     },
   },
   created() {
     this.getList()
   },
   methods: {
+     searchData(dataTable, query) {
+      return dataTable.filter(data => !search || `data.${query}.toLowerCase().includes(search.toLowerCase())`)
+    },
     handleClose(done) {
         this.$confirm('Apakah Anda yakin untuk menutup dialog ini?')
         .then(_ => {
@@ -209,8 +205,14 @@ export default {
         // }
     },
     handleFilter() {
-        this.listQuery.page = 1
-        this.getList()
+      // this.listQuery.page = 1
+      // this.getList()
+      // this.$router.go()
+
+      // http://localhost:8000/api/customers/?email=tes@gmail.com
+
+      
+
     },
 
     handleSizeChange(size) {

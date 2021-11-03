@@ -62,7 +62,7 @@
     import axios from 'axios'
 
     // import file index CRUD
-    import indexCRUD from './index.vue'
+    import indexCRUD from './TblDataPasien.vue'
 
     export default {
         name: 'CRUD',
