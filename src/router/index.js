@@ -101,25 +101,37 @@ export const constantRoutes = [
         meta: { title: 'Contoh CRUD', icon: 'documentation', affix: true }
       },
       {
-        path: 'Asshomadiyah',
-        component: () => import('@/views/CRUD/Tbl'),
-        name: 'Asshomadiyah',
-        meta: { title: 'Asshomadiyah',icon: 'component' },
-        children: [
-          {
-            path: 'DataPasien',
-            component: () => import('@/views/CRUD/TblDataPasien'),
-            name: 'DataPasien',
-            meta: { title: 'Data Pasien' }
-          },
-          // {
-          //   path: 'persetujuan',
-          //   component: () => import('@/views/CRUD/TblDataPasien'),
-          //   name: 'persetujuan',
-          //   meta: { title: 'Persetujuan' }
-          // }
-        ]
+        path: 'DataPasien',
+        component: () => import('@/views/CRUD/TblDataPasien'),
+        name: 'DataPasien',
+        meta: { title: 'Data Pasien',icon: 'component', affix: false }
       },
+      {
+        path: 'DataPemakaianObat',
+        component: () => import('@/views/CRUD/TblDataPemakaianObatPasien'),
+        name: 'DataPemakaianObat',
+        meta: { title: 'Data Pemakaian Obat',icon: 'component', affix: false }
+      },
+      // {
+      //   path: 'Asshomadiyah',
+      //   component: () => import('@/views/CRUD/Tbl'),
+      //   name: 'Asshomadiyah',
+      //   meta: { title: 'Asshomadiyah',icon: 'component' },
+      //   children: [
+      //     {
+      //       path: 'DataPasien',
+      //       component: () => import('@/views/CRUD/TblDataPasien'),
+      //       name: 'DataPasien',
+      //       meta: { title: 'Data Pasien', affix: false }
+      //     },
+      //     {
+      //       path: 'DataPemakaianObat',
+      //       component: () => import('@/views/CRUD/TblDataPemakaianObatPasien'),
+      //       name: 'DataPemakaianObat',
+      //       meta: { title: 'Data Pemakaian Obat' }
+      //     },
+      //   ]
+      // },
     ]
   },
 
@@ -135,15 +147,15 @@ export const constantRoutes = [
       }
     ]
   },
-
+  
   {
     path: '/api/edit_pasien/:id',
     component: Layout,
     children: [
       {
         path: '/api/edit_pasien/:id',
-        name: 'edit',
-        component: () => import('@/views/CRUD/TblEditDataPasien')
+        name: 'editpasien', //name jangan sama, nanti ngaco direct url nya
+        component: () => import('@/views/CRUD/TblDataPasienEdit')
       }
     ]
   },

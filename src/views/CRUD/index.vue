@@ -2,69 +2,122 @@
   <div class="app-container">
     <!-- filter -->
     <div class="filter-container">
-        <el-input v-model="listQuery.name" placeholder="Nama" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"  />
+      <!-- <el-input v-model="listQuery.name" placeholder="Nama" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"  /> -->
 
-        <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-            Search
+        <el-input
+          v-model="search"
+          size="mini"
+          style="width: 200px;"
+          placeholder="cari nama disini"/>
+      <!-- tambah data -->
+      <el-button class="filter-item"  style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="formtambah = true">
+          Tambah
+      </el-button>
+
+      <!-- dialog tambah data -->
+      <el-dialog 
+      title="Tambah Data" 
+      :visible.sync="formtambah" 
+      width="30%"
+      :before-close="handleClose"
+      >
+          <form @submit.prevent="tambahdata">
+              <el-form :model="post">
+                  <el-form-item 
+                  label="Nama" 
+                  :label-width="formLabelWidth"
+                  prop="name"
+                  :rules="[
+                      { required: true, message: 'Masukkan nama', trigger: 'blur' },
+                  ]"
+                  >
+                      <el-input v-model="post.name" placeholder="masukkan nama" autocomplete="off"></el-input>
+                  </el-form-item>
+
+                  <el-form-item 
+                      label="Email" 
+                      :label-width="formLabelWidth"
+                      prop="email"
+                      :rules="[
+                          { required: true, message: 'Masukkan email', trigger: 'blur' },
+                          { type: 'email', message: 'Masukkan email dengan benar', trigger: ['blur', 'change'] }
+                      ]"
+                  >
+                      <el-input v-model="post.email" placeholder="masukkan email"></el-input>
+                  </el-form-item>
+
+                  <el-form-item label="Alamat" :label-width="formLabelWidth">
+                      <el-input
+                      type="textarea"
+                      :autosize="{ minRows: 2, maxRows: 4}"
+                      placeholder="Masukkan alamat"
+                      v-model="post.address">
+                      </el-input>
+                  </el-form-item>
+              </el-form>
+
+              <el-input type="submit" value="Simpan" ></el-input>
+
+          </form>
+
+          <span slot="footer" class="dialog-footer">
+          </span>
+      </el-dialog>
+
+      <!-- dialog edit data -->
+      <el-dialog 
+      title="Edit Data" 
+      :visible.sync="formedit" 
+      width="30%"
+      :before-close="handleClose"
+      >
+        <el-form :model="update">
+
+          <el-form-item 
+          label="Nama" 
+          :label-width="formLabelWidth"
+          prop="name"
+          :rules="[{ required: true, message: 'Masukkan nama', trigger: 'blur' },]"
+          >
+            <el-input v-model="update.name" autocomplete="off"></el-input>
+          </el-form-item>
+
+          <el-form-item 
+              label="Email" 
+              :label-width="formLabelWidth"
+              prop="email"
+              :rules="[
+                  { required: true, message: 'Masukkan email', trigger: 'blur' },
+                  { type: 'email', message: 'Masukkan email dengan benar', trigger: ['blur', 'change'] }
+              ]"
+          >
+              <el-input v-model="update.email" ></el-input>
+          </el-form-item>
+
+          <el-form-item label="Alamat" :label-width="formLabelWidth">
+              <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="update.address"></el-input>
+          </el-form-item>
+        </el-form>
+
+        <el-button class="filter-item"  style="margin-left: 10px;" type="primary" @click="PostUpdate">
+          Update
         </el-button>
-
-        <el-button class="filter-item"  style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="formtambah = true">
-            Tambah
-        </el-button>
-
-        <el-dialog 
-        title="Tambah Data" 
-        :visible.sync="formtambah" 
-        width="30%"
-        :before-close="handleClose"
-        >
-            <form @submit.prevent="onsubmit">
-                <el-form :model="post">
-                    <el-form-item 
-                    label="Nama" 
-                    :label-width="formLabelWidth"
-                    prop="name"
-                    :rules="[
-                        { required: true, message: 'Masukkan nama', trigger: 'blur' },
-                    ]"
-                    >
-                        <el-input v-model="post.name" placeholder="masukkan nama" autocomplete="off"></el-input>
-                    </el-form-item>
-
-                    <el-form-item 
-                        label="Email" 
-                        :label-width="formLabelWidth"
-                        prop="email"
-                        :rules="[
-                            { required: true, message: 'Masukkan email', trigger: 'blur' },
-                            { type: 'email', message: 'Masukkan email dengan benar', trigger: ['blur', 'change'] }
-                        ]"
-                    >
-                        <el-input v-model="post.email" placeholder="masukkan email"></el-input>
-                    </el-form-item>
-
-                    <el-form-item label="Alamat" :label-width="formLabelWidth">
-                        <el-input
-                        type="textarea"
-                        :autosize="{ minRows: 2, maxRows: 4}"
-                        placeholder="Masukkan alamat"
-                        v-model="post.address">
-                        </el-input>
-                    </el-form-item>
-                </el-form>
-
-                <el-input type="submit" value="Simpan" ></el-input>
-
-            </form>
-
-            <span slot="footer" class="dialog-footer">
-            </span>
-        </el-dialog>
+                
+      <span slot="footer" class="dialog-footer"></span>
+      </el-dialog>
     </div>
 
     <!-- tabel -->
-    <el-table
+    <!-- <el-table
       :data="pagedTableData"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%;"
+      :default-sort="{prop: 'id', order: 'ascending'}"
+    > -->
+    <el-table
+      :data="pagedTableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
       border
       fit
       highlight-current-row
@@ -101,7 +154,7 @@
           <el-button
           type="primary"
           size="mini"
-          @click="PostEdit(row.id)"
+          @click="PostEdit(row.id,row.name,row.email,row.address)"
           >Edit</el-button>
          
           <el-button
@@ -114,6 +167,8 @@
       </el-table-column>
       
     </el-table>
+
+    
 
     <!-- pagination -->
     <!-- <el-pagination layout="prev, pager, next" :total="this.tableData.length" @current-change="setPage"></el-pagination> -->
@@ -145,15 +200,21 @@ export default {
 
       listLoading: true,
       tableData:[],
+
+      post: {name: null, email: null, address: null },
+      update: {name: null, email: null, address: null },
+      id: null,
+      name: null,
+      email: null,
+      address: null,
+      
       currentPage: 1,
       pagesize:10,
 
       formtambah: false,
+      formedit: false,
       labelPosition: 'left',
-      post: {},
-      name: null,
-      email: null,
-      address: null,
+     
       formLabelWidth: '100px',
 
       listQuery: {
@@ -163,7 +224,6 @@ export default {
   },
   computed: {
     pagedTableData(dataTable, query) {
-      // return this.tableData.slice(this.pageSize * this.page - this.pageSize, this.pageSize * this.page)
       return this.tableData.slice(this.pagesize * this.currentPage - this.pagesize, this.pagesize * this.currentPage)
     },
   },
@@ -171,57 +231,6 @@ export default {
     this.getList()
   },
   methods: {
-     searchData(dataTable, query) {
-      return dataTable.filter(data => !search || `data.${query}.toLowerCase().includes(search.toLowerCase())`)
-    },
-    handleClose(done) {
-        this.$confirm('Apakah Anda yakin untuk menutup dialog ini?')
-        .then(_ => {
-            done();
-        })
-        .catch(_ => {});
-    },
-    onsubmit () {
-        this.errors=[];
-        
-        this.result = Object.assign({}, this.post);
-
-        if(this.post.address && this.post.name && this.post.email){
-            // this.errors.push("sukses");
-            axios.post('http://localhost:8000/api/customers', this.post)
-                .then((response) => {
-                    //redirect page
-                this.$router.push({
-                    name: 'CRUD'
-                });
-                location.reload();
-                // console.log(response.data.data);
-                }).catch(error => {
-                this.validation = error.response.data.data;
-            });
-        }
-        // else{
-        //     // alert("gagal");
-        // }
-    },
-    handleFilter() {
-      // this.listQuery.page = 1
-      // this.getList()
-      // this.$router.go()
-
-      // http://localhost:8000/api/customers/?email=tes@gmail.com
-
-      
-
-    },
-
-    handleSizeChange(size) {
-      this.pagesize = size;
-    },
-    handleCurrentChange(currentPage) {
-      this.currentPage = currentPage;
-    },
-    
     getList() {
       this.listLoading = true //data loading 
       //get data API with axios
@@ -233,11 +242,69 @@ export default {
       this.listLoading = false
       }, 1.5 * 1000)
     },
-
-    PostEdit(row){
-      // console.log(index, row);
-      this.$router.push(`/api/edit/${row}`);
+     searchData(dataTable, query) {
+      return dataTable.filter(data => !search || `data.${query}.toLowerCase().includes(search.toLowerCase())`)
     },
+    handleClose(done) {
+        this.$confirm('Apakah Anda yakin untuk menutup dialog ini?')
+        .then(_ => {
+            done();
+        })
+        .catch(_ => {});
+    },
+    tambahdata () {
+      
+      if(this.post.address && this.post.name && this.post.email){
+          ///
+          axios.post('http://localhost:8000/api/customers', {
+              name: this.post.name,
+              email: this.post.email,
+              address: this.post.address
+          })
+          .then(res => {
+              // handle success
+              this.getList();
+              this.post.name = '';
+              this.post.email = '';
+              this.post.address = '';
+              this.formtambah = false;
+          })
+          .catch(err => {
+              // handle error
+              console.log(err);
+          })
+
+      }
+    },
+
+    
+    PostEdit: function(row,name,email,address) {
+      this.formedit = true;
+      this.id = row;
+      this.update.name = name;
+      this.update.email = email;
+      this.update.address = address;
+    },
+
+    PostUpdate () {
+      axios.put(`http://127.0.0.1:8000/api/customers/${this.id}`, {
+          name: this.update.name,
+          email: this.update.email,
+          address: this.update.address,
+      })
+      .then(res => {
+          // handle success
+          this.getList();
+          this.formedit = false;
+      })
+      .catch(err => {
+          // handle error
+          console.log(err);
+      })
+    },
+
+    
+
     handleDelete(row) 
     {
       this.$confirm(`Ini akan menghapus ID ${row} secara permanen. Lanjutkan?`, 'Peringatan',{
@@ -246,35 +313,36 @@ export default {
       type: 'warning'
       }).then(() => 
       {
-          axios.delete(`http://127.0.0.1:8000/api/customers/${row}`)
-          .then(response => {
-              this.$router.push({
-                  name: 'CRUD'
-              });
-              
-          // reload page
-          this.$router.go()
-          // refresh
-          // this.$forceUpdate();
-
-          this.tampilkanpesan("bisa hapus");
-          console.log(response);
-
-          })
-          
-          this.$message({
-              type: 'success',
-              message: `Hapus ID ${row} sukses`
-          });
-
+        // axios.delete(`product/delete/${this.productIdDelete}`)
+        axios.delete(`http://127.0.0.1:8000/api/customers/${row}`)
+        .then(res => {
+            // handle success
+            this.getList();
+        })
+        .catch(err => {
+            // handle error
+            console.log(err);
+        })
       }).catch(() => {
-          this.tampilkanpesan("error gak bisa hapus");
-
+          // this.tampilkanpesan("error gak bisa hapus");
           this.$message({
           type: 'info',
           message: `Hapus ID ${row} Gagal`
           });
       });
+
+    },
+
+    filterHandler(value, row, column) {
+      const property = column['property'];
+      return row[property] === value;
+    },
+
+    handleSizeChange(size) {
+      this.pagesize = size;
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
     },
 
     tampilkanpesan(isipesan){

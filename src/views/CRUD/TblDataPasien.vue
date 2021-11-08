@@ -11,133 +11,131 @@
         <el-dialog 
         title="Pendaftaran Pasien Baru" 
         :visible.sync="formtambah" 
-        width="60%"
+        width="70%"
         :before-close="handleClose"
         
         >
             <form @submit.prevent="onsubmit" >
-                <el-form :model="post" :label-position="labelPosition" >
-                    <el-row>
-                      <el-col :span="12" class="app-container">
-                        <el-form-item 
-                        label="Nama Lengkap" 
-                        :label-width="formLabelWidth"
-                        prop="nama"
-                        :rules="[
-                            { required: true, message: 'Masukkan nama', trigger: 'blur' },
-                        ]"
-                        >
-                            <el-input v-model="post.nama" placeholder="masukkan nama" autocomplete="off"></el-input>
-                        </el-form-item>
+              <el-form :model="post" :label-position="labelPosition" >
+                <el-row>
+                  <el-col :span="12" class="app-container">
+                    <el-form-item 
+                    label="Nama Lengkap" 
+                    :label-width="formLabelWidth"
+                    prop="nama"
+                    :rules="[
+                        { required: true, message: 'Masukkan nama', trigger: 'blur' },
+                    ]"
+                    >
+                        <el-input v-model="post.nama" placeholder="masukkan nama" autocomplete="off"></el-input>
+                    </el-form-item>
 
-                        <el-form-item label="Tempat/Tanggal Lahir" :label-width="formLabelWidth" prop="tgllahir" >
-                            <el-col :span="11">
-                                <el-input v-model="post.tempatlahir" placeholder="Masukkan Tempat Lahir" autocomplete="off"></el-input>
-                            </el-col>
-                            <el-col class="line" :span="2">-</el-col>
-                            <el-col :span="11">
-                                <el-date-picker  v-model="post.tgllahir" type="date"  placeholder="Masukkan Tgl Lahir" style="width: 100%;"></el-date-picker>
-                            </el-col>
-                        </el-form-item>
+                    <el-form-item label="Tempat/Tanggal Lahir" :label-width="formLabelWidth" prop="tgllahir" >
+                        <el-col :span="11">
+                            <el-input v-model="post.tempatlahir" placeholder="Masukkan Tempat Lahir" autocomplete="off"></el-input>
+                        </el-col>
+                        <el-col class="line" :span="2">-</el-col>
+                        <el-col :span="11">
+                            <el-date-picker  v-model="post.tgllahir" type="date"  placeholder="Masukkan Tgl Lahir" style="width: 100%;"></el-date-picker>
+                        </el-col>
+                    </el-form-item>
 
-                        <el-form-item label="Jenis Kelamin" :label-width="formLabelWidth" >
-                          <!-- <p>jenis kelamin</p> -->
-                          <el-radio-group v-model="post.jeniskelamin">
-                            <el-radio label="Laki Laki"></el-radio>
-                            <el-radio label="Perempuan"></el-radio>
-                          </el-radio-group>
-                        </el-form-item>
+                    <el-form-item label="Jenis Kelamin" :label-width="formLabelWidth" >
+                      <!-- <p>jenis kelamin</p> -->
+                      <el-radio-group v-model="post.jeniskelamin">
+                        <el-radio label="Laki Laki"></el-radio>
+                        <el-radio label="Perempuan"></el-radio>
+                      </el-radio-group>
+                    </el-form-item>
 
-                        <el-form-item label="Agama" :label-width="formLabelWidth">
-                            <el-select v-model="post.agama" placeholder="Pilih Agama">
-                                <el-option
-                                v-for="item in agama"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
+                    <el-form-item label="Agama" :label-width="formLabelWidth">
+                        <el-select v-model="post.agama" placeholder="Pilih Agama">
+                            <el-option
+                            v-for="item in agama"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
 
-                        <el-form-item label="Pendidikan" :label-width="formLabelWidth">
-                            <el-select v-model="post.pendidikan" placeholder="Pilih Pendidikan">
-                                <el-option
-                                v-for="item in pendidikan"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
+                    <el-form-item label="Pendidikan" :label-width="formLabelWidth">
+                        <el-select v-model="post.pendidikan" placeholder="Pilih Pendidikan">
+                            <el-option
+                            v-for="item in pendidikan"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
 
-                        <el-form-item label="Pekerjaan" :label-width="formLabelWidth">
-                            <el-select v-model="post.pekerjaan" placeholder="Pilih Pekerjaan">
-                                <el-option
-                                v-for="item in pekerjaan"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                      </el-col>
+                    <el-form-item label="Pekerjaan" :label-width="formLabelWidth">
+                        <el-select v-model="post.pekerjaan" placeholder="Pilih Pekerjaan">
+                            <el-option
+                            v-for="item in pekerjaan"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                  </el-col>
 
-                      <el-col :span="12" class="app-container">
-                        <el-form-item label="Status" :label-width="formLabelWidth">
-                            <el-select v-model="post.status" placeholder="Pilih Status">
-                                <el-option
-                                v-for="item in status"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        
-                        <el-form-item 
-                        label="No.Telepon Rumah" 
-                        :label-width="formLabelWidth"
-                        >
-                            <el-input v-model="post.notelepon" placeholder="masukkan nomor telepon rumah" autocomplete="off"></el-input>
-                        </el-form-item>
+                  <el-col :span="12" class="app-container">
+                    <el-form-item label="Status" :label-width="formLabelWidth">
+                        <el-select v-model="post.status" placeholder="Pilih Status">
+                            <el-option
+                            v-for="item in status"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    
+                    <el-form-item 
+                    label="No.Telepon Rumah" 
+                    :label-width="formLabelWidth"
+                    >
+                        <el-input v-model="post.notelepon" placeholder="masukkan nomor telepon rumah" autocomplete="off"></el-input>
+                    </el-form-item>
 
-                        <el-form-item 
-                        label="No.Handphone" 
-                        :label-width="formLabelWidth"
-                        >
-                            <el-input v-model="post.nohandphone" placeholder="masukkan nomor handphone" autocomplete="off"></el-input>
-                        </el-form-item>
+                    <el-form-item 
+                    label="No.Handphone" 
+                    :label-width="formLabelWidth"
+                    >
+                        <el-input v-model="post.nohandphone" placeholder="masukkan nomor handphone" autocomplete="off"></el-input>
+                    </el-form-item>
 
-                        <el-form-item label="Alamat" :label-width="formLabelWidth">
-                            <el-input
-                            type="textarea"
-                            :autosize="{ minRows: 2, maxRows: 4}"
-                            placeholder="Masukkan alamat"
-                            v-model="post.address">
-                            </el-input>
-                        </el-form-item>
+                    <el-form-item label="Alamat" :label-width="formLabelWidth">
+                        <el-input
+                        type="textarea"
+                        :autosize="{ minRows: 2, maxRows: 4}"
+                        placeholder="Masukkan alamat"
+                        v-model="post.address">
+                        </el-input>
+                    </el-form-item>
 
-                        <el-form-item label="Jenis Pembayaran" :label-width="formLabelWidth">
-                            <el-select v-model="post.pembayaran" placeholder="Pilih Pembayaran">
-                                <el-option
-                                v-for="item in pembayaran"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                      </el-col>
+                    <el-form-item label="Jenis Pembayaran" :label-width="formLabelWidth">
+                        <el-select v-model="post.pembayaran" placeholder="Pilih Pembayaran">
+                            <el-option
+                            v-for="item in pembayaran"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
 
-                    </el-row>
+              <!-- <el-input type="submit"  value="Simpan" ></el-input> -->
 
-                </el-form>
-
-                <!-- <el-input type="submit"  value="Simpan" ></el-input> -->
-
-                <el-button class="filter-item" type="primary" @submit.prevent="onsubmit">
-                  Simpan
-                </el-button>
+              <el-button class="filter-item" type="primary" @submit.prevent="onsubmit">
+                Simpan
+              </el-button>
 
             </form>
 
@@ -281,7 +279,7 @@ export default {
         // tableData:[],
         tableData:[{
           id:'1', 
-          nama:'tes', 
+          nama:'Andi', 
           tgl_lahir:'jakarta 11 januari 1997', 
           jenis_kelamin:'L',
           agama:'islam',
@@ -456,9 +454,9 @@ export default {
     getList() {
       this.listLoading = true //data loading 
       //get data API with axios
-    //   axios.get('http://127.0.0.1:8000/api/customers').then(response => {
-    //   this.tableData = response.data.data;
-    //   });
+      //   axios.get('http://127.0.0.1:8000/api/customers').then(response => {
+      //   this.tableData = response.data.data;
+      //   });
       // Just to simulate the time of the request
       setTimeout(() => {
       this.listLoading = false
@@ -508,10 +506,10 @@ export default {
     //   });
     },
 
-    tampilkanpesan(isipesan){
-      // alert(isipesan);
-      console.log(isipesan);
-    }
+    // tampilkanpesan(isipesan){
+    //   // alert(isipesan);
+    //   console.log(isipesan);
+    // }
     
   }
 }
